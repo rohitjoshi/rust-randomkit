@@ -1,0 +1,11 @@
+[package]
+
+name = "randomkit"
+version = "0.0.1"
+authors = ["David Stygstra <david.stygstra@gmail.com>"]
+build = "make -C randomkit"
+
+[[bin]]
+
+name = "basic"
+path = "examples/basic.rs"
