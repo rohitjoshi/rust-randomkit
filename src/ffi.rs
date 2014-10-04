@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use libc::{c_ulong, c_int, c_double, c_long, size_t, c_void};
 
 pub static RK_STATE_LEN: uint = 624;
