@@ -215,7 +215,7 @@ impl Rng {
     /// Draw samples from a negative_binomial distribution.
     // TODO: determine if endpoints are included on p
     pub fn negative_binomial(&mut self, n: f64, p: f64) -> Result<int, Error> {
-        domain!(n > 0);
+        domain!(n > 0.0);
         domain_err!(0.0 < p && p < 1.0, "0.0 < p < 1.0");
         Ok(unsafe { rk_negative_binomial(&mut self.state, n as c_double, p as c_double) as int })
     }
