@@ -78,7 +78,7 @@ extern {
     pub fn rk_gumbel(state: *mut RkState, loc: c_double, scale: c_double) -> c_double;
     pub fn rk_logistic(state: *mut RkState, loc: c_double, scale: c_double) -> c_double;
     pub fn rk_lognormal(state: *mut RkState, mean: c_double, sigma: c_double) -> c_double;
-    pub fn rk_raleigh(state: *mut RkState, mode: c_double) -> c_double;
+    pub fn rk_rayleigh(state: *mut RkState, mode: c_double) -> c_double;
     pub fn rk_wald(state: *mut RkState, mean: c_double, scale: c_double) -> c_double;
     pub fn rk_zipf(state: *mut RkState, a: c_double) -> c_long;
     pub fn rk_geometric(state: *mut RkState, p: c_double) -> c_long;
