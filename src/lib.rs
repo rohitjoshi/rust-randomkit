@@ -173,8 +173,9 @@ impl RkRng {
         Some(multin)
     }
 
-    /// Draw random samples from a multivariate normal distribution.
-    // TODO
+    // TODO: need to find suitable linear algebra package first
+    ///// Draw random samples from a multivariate normal distribution.
+    //pub fn multivariate_normal(&mut self, mean: &[f64], cov: &[f64]) -> Option<Vec<f64>>;
 
     /// Draw samples from a negative_binomial distribution.
     pub fn negative_binomial(&mut self, n: f64, p: f64) -> u32 {
