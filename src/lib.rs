@@ -68,7 +68,20 @@ impl RkRng {
     }
 
     /// Draw samples from the Dirichlet distribution.
-    // TODO
+    pub fn dirichlet(&mut self, alpha: &[f64]) -> Vec<f64> {
+        let k = alpha.len();
+        let mut diric = Vec::from_fn(k, |_| 0.0f64);
+        let mut acc = 0.0f64;
+        for j in range(0u, k) {
+            *diric.get_mut(j) = self.standard_gamma(alpha[j]);
+            acc += diric[j];
+        }
+        let invacc = 1.0 / acc;
+        for j in range(0u, k) {
+            *diric.get_mut(j) = diric[j] * invacc;
+        }
+        diric
+    }
 
     /// Exponential distribution.
     pub fn exponential(&mut self, scale: f64) -> f64 {
@@ -179,7 +192,6 @@ impl RkRng {
     }
 
     /// Standard Cauchy distribution with mode = 0.
-    //standard_cauchy([size])
     pub fn standard_cauchy(&mut self) -> f64 {
         unsafe { rk_standard_cauchy(&mut self.state) as f64 }
     }
