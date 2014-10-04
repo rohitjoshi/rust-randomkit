@@ -20,23 +20,23 @@ fn kahan_sum(darr: &[f64]) -> f64 {
     sum
 }
 
-pub struct RkRng { state: RkState }
+pub struct Rng { state: RkState }
 
-impl RkRng {
-    fn empty() -> RkRng {
-        unsafe { RkRng { state: mem::uninitialized() } }
+impl Rng {
+    fn empty() -> Rng {
+        unsafe { Rng { state: mem::uninitialized() } }
     }
 
-    pub fn seed(seed: u32) -> RkRng {
+    pub fn seed(seed: u32) -> Rng {
         // Seed is &'d with 0xffffffff in randomkit.c, so there's no
         // point in making it larger.
-        let mut r = RkRng::empty();
+        let mut r = Rng::empty();
         unsafe { rk_seed(seed as c_ulong, &mut r.state); }
         r
     }
 
-    pub fn randomseed() -> Option<RkRng> {
-        let mut r = RkRng::empty();
+    pub fn randomseed() -> Option<Rng> {
+        let mut r = Rng::empty();
         match unsafe { rk_randomseed(&mut r.state) } {
             RkNoerr => Some(r),
             RkEnodev => None,
