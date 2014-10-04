@@ -54,9 +54,8 @@ impl RkRng {
     }
 
     /// Random integer between 0 and max, inclusive.
-    pub fn randint(&mut self, max: u32) -> u32 {
-        // Limited to u32 for compatibility with 32-bit architectures.
-        unsafe { rk_interval(max as c_ulong, &mut self.state) as u32 }
+    pub fn randint(&mut self, max: uint) -> uint {
+        unsafe { rk_interval(max as c_ulong, &mut self.state) as uint }
     }
 
     /// The Beta distribution over [0,1]
@@ -65,12 +64,8 @@ impl RkRng {
     }
 
     /// Draw samples from a binomial distribution.
-    pub fn binomial(&mut self, n: u16, p: f64) -> u16 {
-        // Input limited to u16 for compatibility with 32-bit
-        // architectures (only positive n is valid, so there's no sense
-        // in accepting i32). Binomial distribution has support {0..n},
-        // so restricting the output to u16 is safe.
-        unsafe { rk_binomial(&mut self.state, n as c_long, p as c_double) as u16 }
+    pub fn binomial(&mut self, n: int, p: f64) -> int {
+        unsafe { rk_binomial(&mut self.state, n as c_long, p as c_double) as int }
     }
 
     /// Draw samples from a chi-square distribution.
@@ -110,11 +105,8 @@ impl RkRng {
     }
 
     /// Draw samples from the geometric distribution.
-    pub fn geometric(&mut self, p: f64) -> u32 {
-        // The geometric distribution has support {0,1,2,...}. As
-        // rk_geometric has a signed output, u32 captures the full range
-        // on both 32-bit and 64-bit systems.
-        unsafe { rk_geometric(&mut self.state, p as c_double) as u32 }
+    pub fn geometric(&mut self, p: f64) -> int {
+        unsafe { rk_geometric(&mut self.state, p as c_double) as int }
     }
 
     /// Gumbel distribution.
@@ -123,12 +115,8 @@ impl RkRng {
     }
 
     /// Draw samples from a Hypergeometric distribution.
-    pub fn hypergeometric(&mut self, ngood: u16, nbad: u16, nsample: u16) -> u16 {
-        // Limited to u16 for 32-bit systems (only positive input is
-        // valid, so it would be silly to accept i32). Output is
-        // between 0 and min(ngood,nsample), inclusive, so it's okay to
-        // limit the output to u16.
-        unsafe { rk_hypergeometric(&mut self.state, ngood as c_long, nbad as c_long, nsample as c_long) as u16 }
+    pub fn hypergeometric(&mut self, ngood: int, nbad: int, nsample: int) -> int {
+        unsafe { rk_hypergeometric(&mut self.state, ngood as c_long, nbad as c_long, nsample as c_long) as int }
     }
 
     /// Draw samples from the Laplace or double exponential distribution
@@ -148,27 +136,25 @@ impl RkRng {
     }
 
     /// Draw samples from a Logarithmic Series distribution.
-    pub fn logseries(&mut self, p: f64) -> u32 {
-        // The logseries distribution has support {1,2,3,...}, so this
-        // captures the full range of output even on 64-bit systems.
-        unsafe { rk_logseries(&mut self.state, p as c_double) as u32 }
+    pub fn logseries(&mut self, p: f64) -> int {
+        unsafe { rk_logseries(&mut self.state, p as c_double) as int }
     }
 
     /// Draw samples from a multinomial distribution.
-    pub fn multinomial(&mut self, n: u16, pvals: &[f64]) -> Option<Vec<u16>> {
+    pub fn multinomial(&mut self, n: int, pvals: &[f64]) -> Option<Vec<int>> {
         if kahan_sum(pvals.init()) > 1.0 + 1.0e-12 { return None; }
         let d = pvals.len();
-        let mut multin = Vec::from_fn(d, |_| 0u16);
+        let mut multin = Vec::from_fn(d, |_| 0i);
         let mut sum = 1.0f64;
-        let mut dn = n as i32;
+        let mut dn = n;
         for j in range(0u, d - 1) {
-            *multin.get_mut(j) = self.binomial(dn as u16, pvals[j] / sum);
-            dn -= multin[j] as i32;
+            *multin.get_mut(j) = self.binomial(dn, pvals[j] / sum);
+            dn -= multin[j];
             if dn <= 0 { break; }
             sum -= pvals[j];
         }
         if dn > 0 {
-            *multin.get_mut(d - 1) = dn as u16;
+            *multin.get_mut(d - 1) = dn;
         }
         Some(multin)
     }
@@ -178,9 +164,8 @@ impl RkRng {
     //pub fn multivariate_normal(&mut self, mean: &[f64], cov: &[f64]) -> Option<Vec<f64>>;
 
     /// Draw samples from a negative_binomial distribution.
-    pub fn negative_binomial(&mut self, n: f64, p: f64) -> u32 {
-        // Support is nonnegative, so it's okay to limit to u32.
-        unsafe { rk_negative_binomial(&mut self.state, n as c_double, p as c_double) as u32 }
+    pub fn negative_binomial(&mut self, n: f64, p: f64) -> int {
+        unsafe { rk_negative_binomial(&mut self.state, n as c_double, p as c_double) as int }
     }
 
     /// Draw samples from a noncentral chi-square distribution.
@@ -204,9 +189,8 @@ impl RkRng {
     }
 
     /// Draw samples from a Poisson distribution.
-    pub fn poisson(&mut self, lam: f64) -> u32 {
-        // Support is nonnegative, so u32 is okay.
-        unsafe { rk_poisson(&mut self.state, lam as c_double) as u32 }
+    pub fn poisson(&mut self, lam: f64) -> int {
+        unsafe { rk_poisson(&mut self.state, lam as c_double) as int }
     }
 
     /// Draws samples in [0, 1] from a power distribution with positive exponent a - 1.
@@ -270,8 +254,7 @@ impl RkRng {
     }
 
     /// Draw samples from a Zipf distribution.
-    pub fn zipf(&mut self, a: f64) -> u32 {
-        // Zipf has positive support, so u32 is okay.
-        unsafe { rk_zipf(&mut self.state, a as c_double) as u32 }
+    pub fn zipf(&mut self, a: f64) -> int {
+        unsafe { rk_zipf(&mut self.state, a as c_double) as int }
     }
 }
