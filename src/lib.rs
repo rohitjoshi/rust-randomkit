@@ -8,6 +8,18 @@ use ffi::*;
 
 pub mod ffi;
 
+fn kahan_sum(darr: &[f64]) -> f64 {
+    let mut sum = 0.0f64;
+    let mut c = 0.0f64;
+    for d in darr.iter() {
+        let y = d - c;
+        let t = sum + y;
+        c = (t - sum) - y;
+        sum = t;
+    }
+    sum
+}
+
 pub struct RkRng { state: RkState }
 
 impl RkRng {
@@ -53,13 +65,12 @@ impl RkRng {
     }
 
     /// Draw samples from a binomial distribution.
-    pub fn binomial(&mut self, n: u16, p: f64) -> u32 {
+    pub fn binomial(&mut self, n: u16, p: f64) -> u16 {
         // Input limited to u16 for compatibility with 32-bit
         // architectures (only positive n is valid, so there's no sense
         // in accepting i32). Binomial distribution has support {0..n},
-        // so restricting the output to u64 is safe on both 32-bit and
-        // 64-bit architectures.
-        unsafe { rk_binomial(&mut self.state, n as c_long, p as c_double) as u32 }
+        // so restricting the output to u16 is safe.
+        unsafe { rk_binomial(&mut self.state, n as c_long, p as c_double) as u16 }
     }
 
     /// Draw samples from a chi-square distribution.
@@ -144,7 +155,23 @@ impl RkRng {
     }
 
     /// Draw samples from a multinomial distribution.
-    // TODO
+    pub fn multinomial(&mut self, n: u16, pvals: &[f64]) -> Option<Vec<u16>> {
+        if kahan_sum(pvals.init()) > 1.0 + 1.0e-12 { return None; }
+        let d = pvals.len();
+        let mut multin = Vec::from_fn(d, |_| 0u16);
+        let mut sum = 1.0f64;
+        let mut dn = n as i32;
+        for j in range(0u, d - 1) {
+            *multin.get_mut(j) = self.binomial(dn as u16, pvals[j] / sum);
+            dn -= multin[j] as i32;
+            if dn <= 0 { break; }
+            sum -= pvals[j];
+        }
+        if dn > 0 {
+            *multin.get_mut(d - 1) = dn as u16;
+        }
+        Some(multin)
+    }
 
     /// Draw random samples from a multivariate normal distribution.
     // TODO
