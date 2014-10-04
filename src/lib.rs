@@ -68,7 +68,7 @@ impl Rng {
 
     /// Standard normal distribution.
     pub fn randn(&mut self) -> f64 {
-        unsafe { rk_gauss(&mut self.state) as f64 }
+        self.gauss()
     }
 
     /// Random integer between 0 and max, inclusive.
@@ -213,8 +213,11 @@ impl Rng {
     //pub fn multivariate_normal(&mut self, mean: &[f64], cov: &[f64]) -> Result<Vec<f64>, Error>;
 
     /// Draw samples from a negative_binomial distribution.
-    pub fn negative_binomial(&mut self, n: f64, p: f64) -> int {
-        unsafe { rk_negative_binomial(&mut self.state, n as c_double, p as c_double) as int }
+    // TODO: determine if endpoints are included on p
+    pub fn negative_binomial(&mut self, n: f64, p: f64) -> Result<int, Error> {
+        domain!(n > 0);
+        domain_err!(0.0 < p && p < 1.0, "0.0 < p < 1.0");
+        Ok(unsafe { rk_negative_binomial(&mut self.state, n as c_double, p as c_double) as int })
     }
 
     /// Draw samples from a noncentral chi-square distribution.
