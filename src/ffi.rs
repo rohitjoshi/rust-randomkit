@@ -2,12 +2,11 @@
 
 use libc::{c_ulong, c_int, c_double, c_long, size_t, c_void};
 
-pub static RK_STATE_LEN: uint = 624;
 pub static RK_MAX: u32 = 0xffffffff;
 
 #[repr(C)]
 pub struct RkState {
-    key: [c_ulong, .. RK_STATE_LEN],
+    key: [c_ulong, .. 624],
     pos: c_int,
     has_gauss: c_int,
     gauss: c_double,
