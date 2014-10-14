@@ -7,8 +7,20 @@ rust-randomkit
 Bindings for [NumPy's fork](https://github.com/numpy/numpy/tree/master/numpy/random/mtrand)
 of [RandomKit](http://js2007.free.fr/code/index.html#RandomKit).
 
-For the moment, refer to the
-[`numpy.random` documentation](http://docs.scipy.org/doc/numpy/reference/routines.random.html)
-for explanations of each function.
+Usage
+-----
 
-Work in progress.
+Add this to your Cargo.toml:
+
+    [dependencies.randomkit]
+
+    git = "https://github.com/stygstra/rust-randomkit"
+
+and this to your crate root:
+
+    extern crate randomkit;
+
+Documentation
+-------------
+
+[View documentation](http://www.rust-ci.org/stygstra/rust-randomkit/doc/randomkit/).
