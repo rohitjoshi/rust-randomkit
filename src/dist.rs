@@ -54,19 +54,26 @@ fn kahan_sum(darr: &[f64]) -> f64 {
     sum
 }
 
-/// Standard normal (standard Gaussian) distribution (`randn`)
+/// Standard normal (standard Gaussian) distribution (aka randn)
+///
+/// Sample from the normal distribution with mean 0 and standard
+/// deviation 1.
 pub struct Gauss;
 distribution!(Gauss() -> f64 |self, rng| {
     unsafe { rk_gauss(&mut rng.state) as f64 }
 })
 
 /// Uniform distribution on [0,1)
+///
+/// Sample from the uniform distribution on [0,1)
 pub struct Rand;
 distribution!(Rand() -> f64 |self, rng| {
     unsafe { rk_double(&mut rng.state) as f64 }
 })
 
 /// Uniform distribution of integers on [0,max]
+///
+/// Sample from the discrete uniform distribution on [0,max]
 pub struct Randint { max: uint }
 distribution!(Randint(max: uint) -> uint {} |self, rng| {
     unsafe { rk_interval(self.max as c_ulong, &mut rng.state) as uint }
@@ -94,6 +101,9 @@ distribution!(Beta(a: f64, b: f64) -> f64 {
 })
 
 /// Binomial distribution
+///
+/// Sample from the binomial distribution with `n` trials and
+/// probability `p` of success.
 pub struct Binomial { n: int, p: f64 }
 distribution!(Binomial(n: int, p: f64) -> int {
     need!(n >= 0);
@@ -286,6 +296,9 @@ distribution!(NoncentralF(dfnum: f64, dfden: f64, nonc: f64) -> f64 {
 })
 
 /// Normal (Gaussian) distribution
+///
+/// Sample from the normal distribution with mean `loc` and standard
+/// deviation `scale`.
 pub struct Normal { loc: f64, scale: f64 }
 distribution!(Normal(loc: f64, scale: f64) -> f64 {
     need!(scale > 0.0);
@@ -352,6 +365,8 @@ distribution!(Triangular(left: f64, mode: f64, right: f64) -> f64 {
 })
  
 /// Uniform distribution
+///
+/// Sample from the uniform distribution on [low,high).
 pub struct Uniform { low: f64, scale: f64 }
 impl Uniform {
     pub fn new(low: f64, high: f64) -> Result<Uniform, &'static str> {
