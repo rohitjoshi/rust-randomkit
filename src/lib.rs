@@ -1,5 +1,55 @@
+//! Nonuniform random number generation
+//!
+//! This library provides a suite of nonuniform random number generators
+//! via bindings to the Numpy fork of RandomKit. It is approximately
+//! equivalent to Numpy's `numpy.random` module. The API is loosely
+//! based on that of `std::rand`.
+//!
+//! This library is not suitable for cryptography.
+//!
+//! # Examples
+//!
+//! ## Standard normal distribution
+//!
+//! Sample 1000 numbers from the standard normal distribution (Gauss
+//! distribution) with mean 0 and standard deviation 1.
+//!
+//! ```rust
+//! use randomkit::{Rng, Sample};
+//! use randomkit::dist::Gauss;
+//!
+//! fn main() {
+//!     let rng = &mut Rng::new().unwrap();
+//!     for _ in range(0u, 1000) {
+//!         println!("{}", Gauss.sample(rng));
+//!     }
+//! }
+//! ```
+//!
+//! ## Normal distribution
+//!
+//! Sample 1000 numbers from a normal distribution with mean 10 and
+//! standard deviation 5.
+//!
+//! ```rust
+//! use randomkit::{Rng, Sample};
+//! use randomkit::dist::Normal;
+//!
+//! fn main() {
+//!     let rng = &mut Rng::from_seed(1);
+//!     let normal = Normal::new(10.0, 5.0);
+//!     for _ in range(0u, 1000) {
+//!         println!("{}", normal.sample(rng));
+//!     }
+//! }
+//! ```
+
+#![crate_name = "randomkit"]
+#![license = "MIT/BSD"]
+
 #![feature(globs)]
 #![feature(macro_rules)]
+#![experimental]
 
 extern crate libc;
 
