@@ -1,4 +1,4 @@
-//! Nonuniform random number generation
+//! Nonuniform pseudorandom number generation
 //!
 //! This library provides a suite of nonuniform random number generators
 //! via bindings to the Numpy fork of RandomKit. It is approximately
@@ -66,6 +66,7 @@ impl Rng {
         unsafe { Rng { state: mem::uninitialized() } }
     }
 
+    /// Initialize a new pseudorandom number generator from a seed.
     pub fn from_seed(seed: u32) -> Rng {
         // Seed is &'d with 0xffffffff in randomkit.c, so there's no
         // point in making it larger.
@@ -74,6 +75,8 @@ impl Rng {
         r
     }
 
+    /// Initialize a new pseudorandom number generator using the OS's
+    /// random number generator as the seed.
     pub fn new() -> Option<Rng> {
         let mut r = Rng::empty();
         match unsafe { ffi::rk_randomseed(&mut r.state) } {
@@ -84,5 +87,7 @@ impl Rng {
 }
 
 pub trait Sample<Support> {
+    /// Generate a pseudorandom element of `Support` using `rng` as the
+    /// source of randomness.
     fn sample(&self, rng: &mut Rng) -> Support;
 }
