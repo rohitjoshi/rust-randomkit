@@ -1,3 +1,9 @@
+//! Various distributions that can be sampled from.
+//!
+//! Many of these are undocumented, so refer to the
+//! [Numpy documentation](http://docs.scipy.org/doc/numpy/reference/routines.random.html)
+//! for their behavior.
+
 use libc::{c_ulong, c_double, c_long};
 use {Rng, Sample};
 use ffi::*;

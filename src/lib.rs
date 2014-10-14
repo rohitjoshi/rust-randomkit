@@ -37,7 +37,7 @@
 //!
 //! fn main() {
 //!     let rng = &mut Rng::from_seed(1);
-//!     let normal = Normal::new(10.0, 5.0);
+//!     let normal = Normal::new(10.0, 5.0).unwrap();
 //!     for _ in range(0u, 1000) {
 //!         println!("{}", normal.sample(rng));
 //!     }
