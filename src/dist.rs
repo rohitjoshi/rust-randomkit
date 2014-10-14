@@ -112,14 +112,14 @@ distribution!(Chisquare(df: f64) -> f64 {
 })
 
 /// Dirichlet distribution
-pub struct Dirichlet<'a> { alpha: &'a [f64] }
-impl<'a> Dirichlet<'a> {
-    pub fn new(alpha: &[f64]) -> Result<Dirichlet, &'static str> {
+pub struct Dirichlet { alpha: Vec<f64> }
+impl Dirichlet {
+    pub fn new(alpha: Vec<f64>) -> Result<Dirichlet, &'static str> {
         need!(alpha.iter().all(|a| *a > 0.0), "all alpha > 0.0");
         Ok(Dirichlet { alpha: alpha })
     }
 }
-impl<'a> Sample<Vec<f64>> for Dirichlet<'a> {
+impl Sample<Vec<f64>> for Dirichlet {
     fn sample(&self, rng: &mut Rng) -> Vec<f64> {
         let k = self.alpha.len();
         let mut diric = Vec::from_fn(k, |_| 0.0f64);
@@ -226,15 +226,15 @@ distribution!(Logseries(p: f64) -> int {
 })
 
 /// Multinomial distribution
-pub struct Multinomial<'a> { n: int, pvals: &'a [f64] }
-impl<'a> Multinomial<'a> {
-    pub fn new(n: int, pvals: &'a [f64]) -> Result<Multinomial, &'static str> {
+pub struct Multinomial { n: int, pvals: Vec<f64> }
+impl Multinomial {
+    pub fn new(n: int, pvals: Vec<f64>) -> Result<Multinomial, &'static str> {
         need!(pvals.iter().all(|p| *p >= 0.0 && *p <= 1.0), "0 <= p <= 1, all p in pvals");
         need!(kahan_sum(pvals.init()) <= 1.0 + 1.0e-12, "sum of pvals <= 1.0");
         Ok(Multinomial { n: n, pvals: pvals })
     }
 }
-impl<'a> Sample<Vec<int>> for Multinomial<'a> {
+impl Sample<Vec<int>> for Multinomial {
     fn sample(&self, rng: &mut Rng) -> Vec<int> {
         let d = self.pvals.len();
         let mut multin = Vec::from_fn(d, |_| 0i);
