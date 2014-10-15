@@ -4,3 +4,11 @@ name = "randomkit"
 version = "0.0.1"
 authors = ["David Stygstra <david.stygstra@gmail.com>"]
 build = "make -C randomkit"
+
+[dev-dependencies.rustpy]
+
+git = "https://github.com/lukemetz/rustpy"
+
+[dev-dependencies.quickcheck]
+
+git = "https://github.com/BurntSushi/quickcheck"

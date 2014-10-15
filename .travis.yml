@@ -2,6 +2,8 @@ env:
   global:
     - secure: YuIeSxRvKcVrTn4YCO1+09I9PZPAhN+Sbz1USbHYJ7CJsGD/619N8Z8mI+wvr68g1AwSUOPosfdUIS2qe/6m5CDhaD1PSHhYi7QYbqhSDroKKNGXB25ntdzMp9Gx7RagrJfjIL96epAnVvNypyFBC2STm/WW2SPwjimEL6EiAlo=
 language: rust
+install:
+  - sudo apt-get install -qq python-numpy python-dev
 after_script:
   - cargo doc
   - mv target/doc doc
