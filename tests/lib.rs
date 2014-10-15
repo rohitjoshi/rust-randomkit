@@ -99,11 +99,12 @@ fn gumbel(seed: u32, loc: f64, scale: f64) -> bool {
     np(seed, "gumbel", (loc, scale)) == rk(seed, dist::Gumbel::new(loc, scale).ok())
 }
 
-// TODO: `Testable` is not implemented for `fn(u32, int, int, int) -> bool`
-//#[quickcheck]
-//fn hypergeometric(seed: u32, ngood: int, nbad: int, nsample: int) -> bool {
-//    np(seed, "hypergeometric", (ngood, nbad, nsample)) == rk(seed, dist::Hypergeometric::new(ngood, nbad, nsample).ok())
-//}
+#[quickcheck]
+fn hypergeometric(ngood: int, nbad: int, nsample: int) -> bool {
+    // TODO: `Testable` is not implemented for `fn(u32, int, int, int) -> bool`
+    let seed = 1u32;
+    np(seed, "hypergeometric", (ngood, nbad, nsample)) == rk(seed, dist::Hypergeometric::new(ngood, nbad, nsample).ok())
+}
 
 #[quickcheck]
 fn laplace(seed: u32, loc: f64, scale: f64) -> bool {
@@ -141,10 +142,76 @@ fn noncentral_chisquare(seed: u32, df: f64, nonc: f64) -> bool {
     np(seed, "noncentral_chisquare", (df, nonc)) == rk(seed, dist::NoncentralChisquare::new(df, nonc).ok())
 }
 
-// TODO: `Testable` is not implemented for `fn(u32, f64, f64, f64) -> bool`
-//#[quickcheck]
-//fn noncentral_f(seed: u32, dfnum: f64, dfden: f64, nonc: f64) -> bool {
-//    np(seed, "noncentral_f", (dfnum, dfden, nonc)) == rk(seed, dist::NoncentralF::new(dfnum, dfden, nonc).ok())
-//}
+#[quickcheck]
+fn noncentral_f(dfnum: f64, dfden: f64, nonc: f64) -> bool {
+    // TODO: `Testable` is not implemented for `fn(u32, f64, f64, f64) -> bool`
+    let seed = 1u32;
+    np(seed, "noncentral_f", (dfnum, dfden, nonc)) == rk(seed, dist::NoncentralF::new(dfnum, dfden, nonc).ok())
+}
 
-// TODO: finish writing tests
+#[quickcheck]
+fn normal(seed: u32, loc: f64, scale: f64) -> bool {
+    np(seed, "normal", (loc, scale)) == rk(seed, dist::Normal::new(loc, scale).ok())
+}
+
+#[quickcheck]
+fn pareto(seed: u32, a: f64) -> bool {
+    np(seed, "pareto", (a,)) == rk(seed, dist::Pareto::new(a).ok())
+}
+
+#[quickcheck]
+fn poisson(seed: u32, lam: f64) -> bool {
+    np(seed, "poisson", (lam,)) == rk(seed, dist::Poisson::new(lam).ok())
+}
+
+#[quickcheck]
+fn power(seed: u32, a: f64) -> bool {
+    np(seed, "power", (a,)) == rk(seed, dist::Power::new(a).ok())
+}
+
+#[quickcheck]
+fn rayleigh(seed: u32, scale: f64) -> bool {
+    np(seed, "rayleigh", (scale,)) == rk(seed, dist::Rayleigh::new(scale).ok())
+}
+
+#[quickcheck]
+fn standard_gamma(seed: u32, shape: f64) -> bool {
+    np(seed, "standard_gamma", (shape,)) == rk(seed, dist::StandardGamma::new(shape).ok())
+}
+
+#[quickcheck]
+fn standard_t(seed: u32, df: f64) -> bool {
+    np(seed, "standard_t", (df,)) == rk(seed, dist::StandardT::new(df).ok())
+}
+
+#[quickcheck]
+fn triangular(left: f64, mode: f64, right: f64) -> bool {
+    // TODO: `Testable` is not implemented for `fn(u32, f64, f64, f64) -> bool`
+    let seed = 1u32;
+    np(seed, "triangular", (left, mode, right)) == rk(seed, dist::Triangular::new(left, mode, right).ok())
+}
+
+#[quickcheck]
+fn uniform(seed: u32, low: f64, high: f64) -> bool {
+    np(seed, "uniform", (low, high)) == rk(seed, dist::Uniform::new(low, high).ok())
+}
+
+#[quickcheck]
+fn vonmises(seed: u32, mu: f64, kappa: f64) -> bool {
+    np(seed, "vonmises", (mu, kappa)) == rk(seed, dist::Vonmises::new(mu, kappa).ok())
+}
+
+#[quickcheck]
+fn wald(seed: u32, mean: f64, scale: f64) -> bool {
+    np(seed, "wald", (mean, scale)) == rk(seed, dist::Wald::new(mean, scale).ok())
+}
+
+#[quickcheck]
+fn weibull(seed: u32, a: f64) -> bool {
+    np(seed, "weibull", (a,)) == rk(seed, dist::Weibull::new(a).ok())
+}
+
+#[quickcheck]
+fn zipf(seed: u32, a: f64) -> bool {
+    np(seed, "zipf", (a,)) == rk(seed, dist::Zipf::new(a).ok())
+}
