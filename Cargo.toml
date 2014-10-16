@@ -11,4 +11,5 @@ git = "https://github.com/lukemetz/rustpy"
 
 [dev-dependencies.quickcheck]
 
-git = "https://github.com/BurntSushi/quickcheck"
+git = "https://github.com/stygstra/quickcheck"
+branch = "fourargs"

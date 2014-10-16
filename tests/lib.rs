@@ -100,9 +100,7 @@ fn gumbel(seed: u32, loc: f64, scale: f64) -> bool {
 }
 
 #[quickcheck]
-fn hypergeometric(ngood: int, nbad: int, nsample: int) -> bool {
-    // TODO: `Testable` is not implemented for `fn(u32, int, int, int) -> bool`
-    let seed = 1u32;
+fn hypergeometric(seed: u32, ngood: int, nbad: int, nsample: int) -> bool {
     np(seed, "hypergeometric", (ngood, nbad, nsample)) == rk(seed, dist::Hypergeometric::new(ngood, nbad, nsample).ok())
 }
 
@@ -143,9 +141,7 @@ fn noncentral_chisquare(seed: u32, df: f64, nonc: f64) -> bool {
 }
 
 #[quickcheck]
-fn noncentral_f(dfnum: f64, dfden: f64, nonc: f64) -> bool {
-    // TODO: `Testable` is not implemented for `fn(u32, f64, f64, f64) -> bool`
-    let seed = 1u32;
+fn noncentral_f(seed: u32, dfnum: f64, dfden: f64, nonc: f64) -> bool {
     np(seed, "noncentral_f", (dfnum, dfden, nonc)) == rk(seed, dist::NoncentralF::new(dfnum, dfden, nonc).ok())
 }
 
@@ -185,9 +181,7 @@ fn standard_t(seed: u32, df: f64) -> bool {
 }
 
 #[quickcheck]
-fn triangular(left: f64, mode: f64, right: f64) -> bool {
-    // TODO: `Testable` is not implemented for `fn(u32, f64, f64, f64) -> bool`
-    let seed = 1u32;
+fn triangular(seed: u32, left: f64, mode: f64, right: f64) -> bool {
     np(seed, "triangular", (left, mode, right)) == rk(seed, dist::Triangular::new(left, mode, right).ok())
 }
 
