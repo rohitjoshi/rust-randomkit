@@ -68,11 +68,14 @@ fn chisquare(seed: u32, df: f64) -> bool {
     np(seed, "chisquare", (df,)) == rk(seed, dist::Chisquare::new(df).ok())
 }
 
-// TODO: encode Vec<f64> as numpy array
-//#[quickcheck]
-//fn dirichlet(seed: u32, alpha: Vec<f64>) -> bool {
-//    np(seed, "dirichlet", (alpha,)) == rk(seed, dist::Dirichlet::new(alpha).ok())
-//}
+#[test]
+fn dirichlet() {
+    let rng = &mut Rng::from_seed(1);
+    let dist = dist::Dirichlet::new(vec![1.0, 2.0, 3.0]).unwrap();
+    let val = dist.sample(rng);
+    // Ensures result matches Numpy
+    assert_eq!(vec![0.16016217212238471, 0.24657794340798408, 0.59325988446963129], val);
+}
 
 #[quickcheck]
 fn exponential(seed: u32, scale: f64) -> bool {
@@ -124,11 +127,14 @@ fn logseries(seed: u32, p: f64) -> bool {
     np(seed, "logseries", (p,)) == rk(seed, dist::Logseries::new(p).ok())
 }
 
-// TODO: convert Vec<f64> to numpy array
-//#[quickcheck]
-//fn multinomial(seed: u32, pvals: Vec<f64>) -> bool {
-//    np(seed, "multinomial", (pvals,)) == rk(seed, dist::Multinomial::new(pvals).ok())
-//}
+#[test]
+fn multinomial() {
+    let rng = &mut Rng::from_seed(1);
+    let dist = dist::Multinomial::new(10, vec![0.2, 0.2, 0.6]).unwrap();
+    let val = dist.sample(rng);
+    // Ensures result matches numpy
+    assert_eq!(vec![2, 3, 5], val);
+}
 
 #[quickcheck]
 fn negative_binomial(seed: u32, n: f64, p: f64) -> bool {
