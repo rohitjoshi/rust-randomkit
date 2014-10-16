@@ -63,7 +63,7 @@ fn binomial(seed: u32, n: int, p: f64) -> bool {
 }
 
 #[quickcheck]
-fn chisquare(seed: u32, df: f64) -> bool {
+fn chisquare(seed: u32, df: uint) -> bool {
     np(seed, "chisquare", (df,)) == rk(seed, dist::Chisquare::new(df).ok())
 }
 

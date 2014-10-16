@@ -129,10 +129,9 @@ distribution!(Binomial(n: int, p: f64) -> int {
 })
 
 /// Chi-square distribution
-// TODO: wikipedia says df must be natural number
-pub struct Chisquare { df: f64 }
-distribution!(Chisquare(df: f64) -> f64 {
-    need!(df > 0.0);
+pub struct Chisquare { df: uint }
+distribution!(Chisquare(df: uint) -> f64 {
+    need!(df > 0);
 } |self, rng| {
     unsafe { rk_chisquare(&mut rng.state, self.df as c_double) as f64 }
 })
@@ -207,12 +206,11 @@ distribution!(Gumbel(loc: f64, scale: f64) -> f64 {
 })
 
 /// Hypergeometric distribution
-// TODO: check for overflow in ngood + nbad
-// TODO: wikipedia says nsample >= 0 but numpy wants nsample>=1. why?
 pub struct Hypergeometric { ngood: int, nbad: int, nsample: int }
 distribution!(Hypergeometric(ngood: int, nbad: int, nsample: int) -> int {
     need!(ngood >= 0);
     need!(nbad >= 0);
+    need!(ngood.checked_add(&nbad) != None, "ngood+nbad <= std::int::MAX");
     need!(1 <= nsample && nsample <= ngood + nbad, "1 <= nsample <= ngood + nbad");
 } |self, rng| {
     unsafe { rk_hypergeometric(&mut rng.state, self.ngood as c_long, self.nbad as c_long, self.nsample as c_long) as int }
@@ -283,7 +281,6 @@ impl Sample<Vec<int>> for Multinomial {
 }
 
 /// Negative binomial distribution
-// TODO: determine if endpoints are included on p
 pub struct NegativeBinomial { n: f64, p: f64 }
 distribution!(NegativeBinomial(n: f64, p: f64) -> int {
     need!(n > 0.0);
