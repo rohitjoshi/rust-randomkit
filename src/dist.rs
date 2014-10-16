@@ -77,13 +77,23 @@ distribution!(Rand() -> f64 |self, rng| {
     unsafe { rk_double(&mut rng.state) as f64 }
 })
 
-/// Uniform distribution of integers on [0,max]
+/// Uniform distribution of integers on [low,high)
 ///
-/// Sample from the discrete uniform distribution on [0,max]
-pub struct Randint { max: uint }
-distribution!(Randint(max: uint) -> uint {} |self, rng| {
-    unsafe { rk_interval(self.max as c_ulong, &mut rng.state) as uint }
-})
+/// Sample from the discrete uniform distribution on [low,high)
+pub struct Randint { low: int, diff: uint }
+impl Randint {
+    pub fn new(low: int, high: int) -> Result<Randint, &'static str> {
+        need!(low < high);
+        let diff = high as uint - low as uint - 1u;
+        Ok(Randint { low: low, diff: diff })
+    }
+}
+impl Sample<int> for Randint {
+    fn sample(&self, rng: &mut Rng) -> int {
+        let rv = unsafe { rk_interval(self.diff as c_ulong, &mut rng.state) as uint };
+        self.low + rv as int
+    }
+}
 
 /// Standard Cauchy distribution with mode 0
 pub struct StandardCauchy;

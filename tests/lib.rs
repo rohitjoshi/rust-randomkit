@@ -37,11 +37,10 @@ fn rand(seed: u32) -> bool {
     np(seed, "rand", NoArgs) == rk(seed, Some(dist::Rand))
 }
 
-// TODO: why does this fail?
-//#[quickcheck]
-//fn randint(seed: u32, max: uint) -> bool {
-//    np(seed, "randint", (max,)) == rk(seed, dist::Randint::new(max).ok())
-//}
+#[quickcheck]
+fn randint(seed: u32, low: int, high: int) -> bool {
+    np(seed, "randint", (low, high)) == rk(seed, dist::Randint::new(low, high).ok())
+}
 
 #[quickcheck]
 fn standard_cauchy(seed: u32) -> bool {
