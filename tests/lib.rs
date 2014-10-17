@@ -8,10 +8,10 @@ extern crate rustpy;
 
 use randomkit::{Rng, Sample};
 use randomkit::dist;
-use rustpy::{PyType, PyState, NoArgs};
+use rustpy::{ToPyType, FromPyType, PyState, NoArgs};
 
 /// Draw a value from numpy.random, yielding `None` on error.
-fn np<I: PyType, R: PyType>(seed: u32, func: &str, args: I) -> Option<R> {
+fn np<I: ToPyType, R: FromPyType>(seed: u32, func: &str, args: I) -> Option<R> {
     let py = PyState::new();
     let mtrand = py.get_module("numpy.random").ok().expect("numpy not installed");
     let state = mtrand.call_func("RandomState", (seed,)).unwrap();
