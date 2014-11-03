@@ -151,13 +151,13 @@ impl Sample<Vec<f64>> for Dirichlet {
         let mut acc = 0.0f64;
         for j in range(0u, k) {
             unsafe {
-                *diric.get_mut(j) = rk_standard_gamma(&mut rng.state, self.alpha[j] as c_double) as c_double;
+                diric[j] = rk_standard_gamma(&mut rng.state, self.alpha[j] as c_double) as c_double;
             }
             acc += diric[j];
         }
         let invacc = 1.0 / acc;
         for j in range(0u, k) {
-            *diric.get_mut(j) = diric[j] * invacc;
+            diric[j] = diric[j] * invacc;
         }
         diric
     }
@@ -267,14 +267,14 @@ impl Sample<Vec<int>> for Multinomial {
         for j in range(0u, d - 1) {
             let p = self.pvals[j] / sum;
             unsafe {
-                *multin.get_mut(j) = rk_binomial(&mut rng.state, dn as c_long, p as c_double) as int;
+                multin[j] = rk_binomial(&mut rng.state, dn as c_long, p as c_double) as int;
             }
             dn -= multin[j];
             if dn <= 0 { break; }
             sum -= self.pvals[j];
         }
         if dn > 0 {
-            *multin.get_mut(d - 1) = dn;
+            multin[d - 1] = dn;
         }
         multin
     }
