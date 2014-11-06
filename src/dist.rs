@@ -51,7 +51,7 @@ macro_rules! distribution(
 fn kahan_sum(darr: &[f64]) -> f64 {
     let mut sum = 0.0f64;
     let mut c = 0.0f64;
-    for d in darr.iter() {
+    for &d in darr.iter() {
         let y = d - c;
         let t = sum + y;
         c = (t - sum) - y;
