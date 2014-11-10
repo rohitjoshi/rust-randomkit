@@ -9,6 +9,6 @@ build = "make -C randomkit"
 
 git = "https://github.com/lukemetz/rustpy"
 
-[dev-dependencies.quickcheck]
+[dev-dependencies.quickcheck_macros]
 
 git = "https://github.com/BurntSushi/quickcheck"
