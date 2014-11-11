@@ -3,7 +3,7 @@
 name = "randomkit"
 version = "0.0.1"
 authors = ["David Stygstra <david.stygstra@gmail.com>"]
-build = "make -C randomkit"
+build = "build.rs"
 
 [dev-dependencies.rustpy]
 
