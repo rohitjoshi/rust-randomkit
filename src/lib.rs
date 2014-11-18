@@ -80,7 +80,7 @@ impl Rng {
     pub fn new() -> Option<Rng> {
         let mut r = Rng::empty();
         match unsafe { ffi::rk_randomseed(&mut r.state) } {
-            ffi::RkNoerr => Some(r),
+            ffi::RkError::RkNoerr => Some(r),
             _ => None,
         }
     }

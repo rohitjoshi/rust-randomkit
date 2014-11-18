@@ -6,6 +6,7 @@
 
 use libc::{c_ulong, c_double, c_long};
 use {Rng, Sample};
+use std::num::{Int, Float};
 use ffi::*;
 
 macro_rules! need(
@@ -210,7 +211,7 @@ pub struct Hypergeometric { ngood: int, nbad: int, nsample: int }
 distribution!(Hypergeometric(ngood: int, nbad: int, nsample: int) -> int {
     need!(ngood >= 0);
     need!(nbad >= 0);
-    need!(ngood.checked_add(&nbad) != None, "ngood+nbad <= std::int::MAX");
+    need!(ngood.checked_add(nbad) != None, "ngood+nbad <= std::int::MAX");
     need!(1 <= nsample && nsample <= ngood + nbad, "1 <= nsample <= ngood + nbad");
 } |self, rng| {
     unsafe { rk_hypergeometric(&mut rng.state, self.ngood as c_long, self.nbad as c_long, self.nsample as c_long) as int }
