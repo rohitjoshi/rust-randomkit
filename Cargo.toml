@@ -5,10 +5,11 @@ version = "0.0.1"
 authors = ["David Stygstra <david.stygstra@gmail.com>"]
 build = "build.rs"
 
-[dev-dependencies.rustpy]
-
-git = "https://github.com/lukemetz/rustpy"
-
-[dev-dependencies.quickcheck_macros]
-
-git = "https://github.com/BurntSushi/quickcheck"
+# TODO: uncomment when rustpy and quickcheck are fixed
+#[dev-dependencies.rustpy]
+#
+#git = "https://github.com/lukemetz/rustpy"
+#
+#[dev-dependencies.quickcheck_macros]
+#
+#git = "https://github.com/BurntSushi/quickcheck"
