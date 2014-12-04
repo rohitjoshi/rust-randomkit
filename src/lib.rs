@@ -45,7 +45,6 @@
 //! ```
 
 #![crate_name = "randomkit"]
-#![license = "MIT/BSD"]
 
 #![feature(globs)]
 #![feature(macro_rules)]
