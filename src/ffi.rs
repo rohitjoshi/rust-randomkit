@@ -6,7 +6,7 @@ pub static RK_MAX: u32 = 0xffffffff;
 
 #[repr(C)]
 pub struct RkState {
-    key: [c_ulong, .. 624],
+    key: [c_ulong; 624],
     pos: c_int,
     has_gauss: c_int,
     gauss: c_double,
