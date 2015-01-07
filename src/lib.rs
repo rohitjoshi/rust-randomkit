@@ -46,8 +46,6 @@
 
 #![crate_name = "randomkit"]
 
-#![feature(globs)]
-#![feature(macro_rules)]
 #![experimental]
 
 extern crate libc;
