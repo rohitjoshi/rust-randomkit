@@ -84,18 +84,18 @@ distribution!(Rand() -> f64, |self, rng| {
 ///
 /// Sample from the discrete uniform distribution on [low,high)
 #[derive(Copy)]
-pub struct Randint { low: int, diff: uint }
+pub struct Randint { low: isize, diff: usize }
 impl Randint {
-    pub fn new(low: int, high: int) -> Result<Randint, &'static str> {
+    pub fn new(low: isize, high: isize) -> Result<Randint, &'static str> {
         need!(low < high);
-        let diff = high as uint - low as uint - 1u;
+        let diff = high as usize - low as usize - 1;
         Ok(Randint { low: low, diff: diff })
     }
 }
-impl Sample<int> for Randint {
-    fn sample(&self, rng: &mut Rng) -> int {
-        let rv = unsafe { rk_interval(self.diff as c_ulong, &mut rng.state) as uint };
-        self.low + rv as int
+impl Sample<isize> for Randint {
+    fn sample(&self, rng: &mut Rng) -> isize {
+        let rv = unsafe { rk_interval(self.diff as c_ulong, &mut rng.state) as usize };
+        self.low + rv as isize
     }
 }
 
@@ -128,18 +128,18 @@ distribution!(Beta(a: f64, b: f64) -> f64, {
 /// Sample from the binomial distribution with `n` trials and
 /// probability `p` of success.
 #[derive(Copy)]
-pub struct Binomial { n: int, p: f64 }
-distribution!(Binomial(n: int, p: f64) -> int, {
+pub struct Binomial { n: isize, p: f64 }
+distribution!(Binomial(n: isize, p: f64) -> isize, {
     need!(n >= 0);
     need!(0.0 <= p && p <= 1.0, "0.0 <= p <= 1.0");
 }, |self, rng| {
-    unsafe { rk_binomial(&mut rng.state, self.n as c_long, self.p as c_double) as int }
+    unsafe { rk_binomial(&mut rng.state, self.n as c_long, self.p as c_double) as isize }
 });
 
 /// Chi-square distribution
 #[derive(Copy)]
-pub struct Chisquare { df: uint }
-distribution!(Chisquare(df: uint) -> f64, {
+pub struct Chisquare { df: usize }
+distribution!(Chisquare(df: usize) -> f64, {
     need!(df > 0);
 }, |self, rng| {
     unsafe { rk_chisquare(&mut rng.state, self.df as c_double) as f64 }
@@ -158,14 +158,14 @@ impl Sample<Vec<f64>> for Dirichlet {
         let k = self.alpha.len();
         let mut diric: Vec<f64> = range(0, k).map(|_| 0.0f64).collect();
         let mut acc = 0.0f64;
-        for j in range(0u, k) {
+        for j in range(0, k) {
             unsafe {
                 diric[j] = rk_standard_gamma(&mut rng.state, self.alpha[j] as c_double) as c_double;
             }
             acc += diric[j];
         }
         let invacc = 1.0 / acc;
-        for j in range(0u, k) {
+        for j in range(0, k) {
             diric[j] = diric[j] * invacc;
         }
         diric
@@ -204,10 +204,10 @@ distribution!(Gamma(shape: f64, scale: f64) -> f64, {
 /// Geometric distribution
 #[derive(Copy)]
 pub struct Geometric { p: f64 }
-distribution!(Geometric(p: f64) -> int, {
+distribution!(Geometric(p: f64) -> isize, {
     need!(0.0 < p && p <= 1.0, "0.0 < p <= 1.0");
 }, |self, rng| {
-    unsafe { rk_geometric(&mut rng.state, self.p as c_double) as int }
+    unsafe { rk_geometric(&mut rng.state, self.p as c_double) as isize }
 });
 
 /// Gumbel distribution
@@ -221,14 +221,14 @@ distribution!(Gumbel(loc: f64, scale: f64) -> f64, {
 
 /// Hypergeometric distribution
 #[derive(Copy)]
-pub struct Hypergeometric { ngood: int, nbad: int, nsample: int }
-distribution!(Hypergeometric(ngood: int, nbad: int, nsample: int) -> int, {
+pub struct Hypergeometric { ngood: isize, nbad: isize, nsample: isize }
+distribution!(Hypergeometric(ngood: isize, nbad: isize, nsample: isize) -> isize, {
     need!(ngood >= 0);
     need!(nbad >= 0);
     need!(ngood.checked_add(nbad) != None, "ngood+nbad <= std::int::MAX");
     need!(1 <= nsample && nsample <= ngood + nbad, "1 <= nsample <= ngood + nbad");
 }, |self, rng| {
-    unsafe { rk_hypergeometric(&mut rng.state, self.ngood as c_long, self.nbad as c_long, self.nsample as c_long) as int }
+    unsafe { rk_hypergeometric(&mut rng.state, self.ngood as c_long, self.nbad as c_long, self.nsample as c_long) as isize }
 });
 
 /// Laplace (double exponential) distribution
@@ -261,32 +261,32 @@ distribution!(Lognormal(mean: f64, sigma: f64) -> f64, {
 /// Logarithmic series distribution
 #[derive(Copy)]
 pub struct Logseries { p: f64 }
-distribution!(Logseries(p: f64) -> int, {
+distribution!(Logseries(p: f64) -> isize, {
     need!(p > 0.0);
     need!(p < 1.0);
 }, |self, rng| {
-    unsafe { rk_logseries(&mut rng.state, self.p as c_double) as int }
+    unsafe { rk_logseries(&mut rng.state, self.p as c_double) as isize }
 });
 
 /// Multinomial distribution
-pub struct Multinomial { n: int, pvals: Vec<f64> }
+pub struct Multinomial { n: isize, pvals: Vec<f64> }
 impl Multinomial {
-    pub fn new(n: int, pvals: Vec<f64>) -> Result<Multinomial, &'static str> {
+    pub fn new(n: isize, pvals: Vec<f64>) -> Result<Multinomial, &'static str> {
         need!(pvals.iter().all(|p| *p >= 0.0 && *p <= 1.0), "0 <= p <= 1, all p in pvals");
         need!(kahan_sum(pvals.init()) <= 1.0 + 1.0e-12, "sum of pvals <= 1.0");
         Ok(Multinomial { n: n, pvals: pvals })
     }
 }
-impl Sample<Vec<int>> for Multinomial {
-    fn sample(&self, rng: &mut Rng) -> Vec<int> {
+impl Sample<Vec<isize>> for Multinomial {
+    fn sample(&self, rng: &mut Rng) -> Vec<isize> {
         let d = self.pvals.len();
-        let mut multin: Vec<int> = range(0, d).map(|_| 0i).collect();
+        let mut multin: Vec<isize> = range(0, d).map(|_| 0).collect();
         let mut sum = 1.0f64;
         let mut dn = self.n;
-        for j in range(0u, d - 1) {
+        for j in range(0, d - 1) {
             let p = self.pvals[j] / sum;
             unsafe {
-                multin[j] = rk_binomial(&mut rng.state, dn as c_long, p as c_double) as int;
+                multin[j] = rk_binomial(&mut rng.state, dn as c_long, p as c_double) as isize;
             }
             dn -= multin[j];
             if dn <= 0 { break; }
@@ -302,11 +302,11 @@ impl Sample<Vec<int>> for Multinomial {
 /// Negative binomial distribution
 #[derive(Copy)]
 pub struct NegativeBinomial { n: f64, p: f64 }
-distribution!(NegativeBinomial(n: f64, p: f64) -> int, {
+distribution!(NegativeBinomial(n: f64, p: f64) -> isize, {
     need!(n > 0.0);
     need!(0.0 < p && p < 1.0, "0.0 < p < 1.0");
 }, |self, rng| {
-    unsafe { rk_negative_binomial(&mut rng.state, self.n as c_double, self.p as c_double) as int }
+    unsafe { rk_negative_binomial(&mut rng.state, self.n as c_double, self.p as c_double) as isize }
 });
 
 /// Noncentral chi-square distribution
@@ -354,11 +354,11 @@ distribution!(Pareto(a: f64) -> f64, {
 /// Poisson distribution
 #[derive(Copy)]
 pub struct Poisson { lam: f64 }
-distribution!(Poisson(lam: f64) -> int, {
+distribution!(Poisson(lam: f64) -> isize, {
     need!(lam > 0.0);
     need!(lam <= 9.2233720064847708e+18);  // from mtrand.pyx
 }, |self, rng| {
-    unsafe { rk_poisson(&mut rng.state, self.lam as c_double) as int }
+    unsafe { rk_poisson(&mut rng.state, self.lam as c_double) as isize }
 });
 
 /// Power distribution on [0,1] with positive exponent `a - 1`
@@ -456,8 +456,8 @@ distribution!(Weibull(a: f64) -> f64, {
 /// Zipf distribution
 #[derive(Copy)]
 pub struct Zipf { a: f64 }
-distribution!(Zipf(a: f64) -> int, {
+distribution!(Zipf(a: f64) -> isize, {
     need!(a > 1.0);
 }, |self, rng| {
-    unsafe { rk_zipf(&mut rng.state, self.a as c_double) as int }
+    unsafe { rk_zipf(&mut rng.state, self.a as c_double) as isize }
 });
