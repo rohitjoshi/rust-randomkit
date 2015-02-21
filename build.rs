@@ -1,8 +1,11 @@
-use std::old_io::Command;
-use std::os;
+#![feature(process)]
+#![feature(env)]
+
+use std::process::Command;
+use std::env;
 
 fn main() {
-  let out_dir = os::getenv("OUT_DIR").unwrap();
+  let out_dir = env::var("OUT_DIR").unwrap();
   Command::new("make").arg("-C").arg("randomkit").status().unwrap();
   println!("cargo:rustc-flags=-L {}", out_dir);
 }
