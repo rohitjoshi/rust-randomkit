@@ -46,7 +46,6 @@
 
 #![crate_name = "randomkit"]
 
-#![experimental]
 
 extern crate libc;
 
