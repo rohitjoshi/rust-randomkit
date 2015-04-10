@@ -65,7 +65,7 @@ fn kahan_sum(darr: &[f64]) -> f64 {
 ///
 /// Sample from the normal distribution with mean 0 and standard
 /// deviation 1.
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Gauss;
 distribution!(Gauss() -> f64, |self, rng| {
     unsafe { rk_gauss(&mut rng.state) as f64 }
@@ -74,7 +74,7 @@ distribution!(Gauss() -> f64, |self, rng| {
 /// Uniform distribution on [0,1)
 ///
 /// Sample from the uniform distribution on [0,1)
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Rand;
 distribution!(Rand() -> f64, |self, rng| {
     unsafe { rk_double(&mut rng.state) as f64 }
@@ -83,7 +83,7 @@ distribution!(Rand() -> f64, |self, rng| {
 /// Uniform distribution of integers on [low,high)
 ///
 /// Sample from the discrete uniform distribution on [low,high)
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Randint { low: isize, diff: usize }
 impl Randint {
     pub fn new(low: isize, high: isize) -> Result<Randint, &'static str> {
@@ -100,21 +100,21 @@ impl Sample<isize> for Randint {
 }
 
 /// Standard Cauchy distribution with mode 0
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct StandardCauchy;
 distribution!(StandardCauchy() -> f64, |self, rng| {
     unsafe { rk_standard_cauchy(&mut rng.state) as f64 }
 });
 
 /// Standard exponential distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct StandardExponential;
 distribution!(StandardExponential() -> f64, |self, rng| {
     unsafe { rk_standard_exponential(&mut rng.state) as f64 }
 });
 
 /// Beta distribution over [0,1]
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Beta { a: f64, b: f64 }
 distribution!(Beta(a: f64, b: f64) -> f64, {
     need!(a > 0.0);
@@ -127,7 +127,7 @@ distribution!(Beta(a: f64, b: f64) -> f64, {
 ///
 /// Sample from the binomial distribution with `n` trials and
 /// probability `p` of success.
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Binomial { n: isize, p: f64 }
 distribution!(Binomial(n: isize, p: f64) -> isize, {
     need!(n >= 0);
@@ -137,7 +137,7 @@ distribution!(Binomial(n: isize, p: f64) -> isize, {
 });
 
 /// Chi-square distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Chisquare { df: usize }
 distribution!(Chisquare(df: usize) -> f64, {
     need!(df > 0);
@@ -173,7 +173,7 @@ impl Sample<Vec<f64>> for Dirichlet {
 }
 
 /// Exponential distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Exponential { scale: f64 }
 distribution!(Exponential(scale: f64) -> f64, {
     need!(scale > 0.0);
@@ -182,7 +182,7 @@ distribution!(Exponential(scale: f64) -> f64, {
 });
 
 /// F distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct F { dfnum: f64, dfden: f64 }
 distribution!(F(dfnum: f64, dfden: f64) -> f64, {
     need!(dfnum > 0.0);
@@ -192,7 +192,7 @@ distribution!(F(dfnum: f64, dfden: f64) -> f64, {
 });
 
 /// Gamma distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Gamma { shape: f64, scale: f64 }
 distribution!(Gamma(shape: f64, scale: f64) -> f64, {
     need!(shape > 0.0);
@@ -202,7 +202,7 @@ distribution!(Gamma(shape: f64, scale: f64) -> f64, {
 });
 
 /// Geometric distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Geometric { p: f64 }
 distribution!(Geometric(p: f64) -> isize, {
     need!(0.0 < p && p <= 1.0, "0.0 < p <= 1.0");
@@ -211,7 +211,7 @@ distribution!(Geometric(p: f64) -> isize, {
 });
 
 /// Gumbel distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Gumbel { loc: f64, scale: f64 }
 distribution!(Gumbel(loc: f64, scale: f64) -> f64, {
     need!(scale > 0.0);
@@ -220,7 +220,7 @@ distribution!(Gumbel(loc: f64, scale: f64) -> f64, {
 });
 
 /// Hypergeometric distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Hypergeometric { ngood: isize, nbad: isize, nsample: isize }
 distribution!(Hypergeometric(ngood: isize, nbad: isize, nsample: isize) -> isize, {
     need!(ngood >= 0);
@@ -232,7 +232,7 @@ distribution!(Hypergeometric(ngood: isize, nbad: isize, nsample: isize) -> isize
 });
 
 /// Laplace (double exponential) distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Laplace { loc: f64, scale: f64 }
 distribution!(Laplace(loc: f64, scale: f64) -> f64, {
     need!(scale > 0.0);
@@ -241,7 +241,7 @@ distribution!(Laplace(loc: f64, scale: f64) -> f64, {
 });
 
 /// Logistic distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Logistic { loc: f64, scale: f64 }
 distribution!(Logistic(loc: f64, scale: f64) -> f64, {
     need!(scale > 0.0);
@@ -250,7 +250,7 @@ distribution!(Logistic(loc: f64, scale: f64) -> f64, {
 });
 
 /// Log-normal distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Lognormal { mean: f64, sigma: f64 }
 distribution!(Lognormal(mean: f64, sigma: f64) -> f64, {
     need!(sigma > 0.0);
@@ -259,7 +259,7 @@ distribution!(Lognormal(mean: f64, sigma: f64) -> f64, {
 });
 
 /// Logarithmic series distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Logseries { p: f64 }
 distribution!(Logseries(p: f64) -> isize, {
     need!(p > 0.0);
@@ -273,7 +273,7 @@ pub struct Multinomial { n: isize, pvals: Vec<f64> }
 impl Multinomial {
     pub fn new(n: isize, pvals: Vec<f64>) -> Result<Multinomial, &'static str> {
         need!(pvals.iter().all(|p| *p >= 0.0 && *p <= 1.0), "0 <= p <= 1, all p in pvals");
-        need!(kahan_sum(pvals.init()) <= 1.0 + 1.0e-12, "sum of pvals <= 1.0");
+        need!(kahan_sum(pvals.init()) <= 1.0 + 1.0e-12, "sum(pvals[:-1]) <= 1.0");
         Ok(Multinomial { n: n, pvals: pvals })
     }
 }
@@ -300,7 +300,7 @@ impl Sample<Vec<isize>> for Multinomial {
 }
 
 /// Negative binomial distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct NegativeBinomial { n: f64, p: f64 }
 distribution!(NegativeBinomial(n: f64, p: f64) -> isize, {
     need!(n > 0.0);
@@ -310,7 +310,7 @@ distribution!(NegativeBinomial(n: f64, p: f64) -> isize, {
 });
 
 /// Noncentral chi-square distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct NoncentralChisquare { df: f64, nonc: f64 }
 distribution!(NoncentralChisquare(df: f64, nonc: f64) -> f64, {
     need!(df >= 1.0);
@@ -320,7 +320,7 @@ distribution!(NoncentralChisquare(df: f64, nonc: f64) -> f64, {
 });
 
 /// Noncentral F distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct NoncentralF { dfnum: f64, dfden: f64, nonc: f64 }
 distribution!(NoncentralF(dfnum: f64, dfden: f64, nonc: f64) -> f64, {
     need!(dfnum > 1.0);
@@ -334,7 +334,7 @@ distribution!(NoncentralF(dfnum: f64, dfden: f64, nonc: f64) -> f64, {
 ///
 /// Sample from the normal distribution with mean `loc` and standard
 /// deviation `scale`.
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Normal { loc: f64, scale: f64 }
 distribution!(Normal(loc: f64, scale: f64) -> f64, {
     need!(scale > 0.0);
@@ -343,7 +343,7 @@ distribution!(Normal(loc: f64, scale: f64) -> f64, {
 });
 
 /// Pareto II (Lomax) distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Pareto { a: f64 }
 distribution!(Pareto(a: f64) -> f64, {
     need!(a > 0.0);
@@ -352,7 +352,7 @@ distribution!(Pareto(a: f64) -> f64, {
 });
 
 /// Poisson distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Poisson { lam: f64 }
 distribution!(Poisson(lam: f64) -> isize, {
     need!(lam > 0.0);
@@ -362,7 +362,7 @@ distribution!(Poisson(lam: f64) -> isize, {
 });
 
 /// Power distribution on [0,1] with positive exponent `a - 1`
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Power { a: f64 }
 distribution!(Power(a: f64) -> f64, {
     need!(a > 0.0);
@@ -371,7 +371,7 @@ distribution!(Power(a: f64) -> f64, {
 });
 
 /// Rayleigh distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Rayleigh { scale: f64 }
 distribution!(Rayleigh(scale: f64) -> f64, {
     need!(scale > 0.0);
@@ -380,7 +380,7 @@ distribution!(Rayleigh(scale: f64) -> f64, {
 });
 
 /// Standard gamma distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct StandardGamma { shape: f64 }
 distribution!(StandardGamma(shape: f64) -> f64, {
     need!(shape > 0.0);
@@ -389,7 +389,7 @@ distribution!(StandardGamma(shape: f64) -> f64, {
 });
 
 /// Standard student's T distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct StandardT { df: f64 }
 distribution!(StandardT(df: f64) -> f64, {
     need!(df > 0.0);
@@ -398,7 +398,7 @@ distribution!(StandardT(df: f64) -> f64, {
 });
 
 /// Triangular distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Triangular { left: f64, mode: f64, right: f64 }
 distribution!(Triangular(left: f64, mode: f64, right: f64) -> f64, {
     need!(left < right);
@@ -410,7 +410,7 @@ distribution!(Triangular(left: f64, mode: f64, right: f64) -> f64, {
 /// Uniform distribution
 ///
 /// Sample from the uniform distribution on [low,high).
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Uniform { low: f64, scale: f64 }
 impl Uniform {
     pub fn new(low: f64, high: f64) -> Result<Uniform, &'static str> {
@@ -426,7 +426,7 @@ impl Sample<f64> for Uniform {
 }
 
 /// von Mises distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Vonmises { mu: f64, kappa: f64 }
 distribution!(Vonmises(mu: f64, kappa: f64) -> f64, {
     need!(kappa > 0.0);
@@ -435,7 +435,7 @@ distribution!(Vonmises(mu: f64, kappa: f64) -> f64, {
 });
 
 /// Wald (inverse Gaussian) distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Wald { mean: f64, scale: f64 }
 distribution!(Wald(mean: f64, scale: f64) -> f64, {
     need!(mean > 0.0);
@@ -445,7 +445,7 @@ distribution!(Wald(mean: f64, scale: f64) -> f64, {
 });
 
 /// Weibull distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Weibull { a: f64 }
 distribution!(Weibull(a: f64) -> f64, {
     need!(a > 0.0);
@@ -454,7 +454,7 @@ distribution!(Weibull(a: f64) -> f64, {
 });
 
 /// Zipf distribution
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Zipf { a: f64 }
 distribution!(Zipf(a: f64) -> isize, {
     need!(a > 1.0);

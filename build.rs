@@ -1,6 +1,3 @@
-#![feature(process)]
-#![feature(env)]
-
 use std::process::Command;
 use std::env;
 
