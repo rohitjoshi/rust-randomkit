@@ -9,7 +9,7 @@ fn main() {
     println!("{}", Rand.sample(&mut r));
 
     let beta = Beta::new(1.0, 2.0).unwrap();
-    for _ in (0..10us) {
+    for _ in 0..10 {
         print!("{} ", beta.sample(&mut r));
     }
     println!("");

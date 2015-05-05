@@ -20,7 +20,7 @@
 //!
 //! fn main() {
 //!     let rng = &mut Rng::new().unwrap();
-//!     for _ in (0..1000us) {
+//!     for _ in 0..1000 {
 //!         println!("{}", Gauss.sample(rng));
 //!     }
 //! }
@@ -38,7 +38,7 @@
 //! fn main() {
 //!     let rng = &mut Rng::from_seed(1);
 //!     let normal = Normal::new(10.0, 5.0).unwrap();
-//!     for _ in (0..1000us) {
+//!     for _ in 0..1000 {
 //!         println!("{}", normal.sample(rng));
 //!     }
 //! }

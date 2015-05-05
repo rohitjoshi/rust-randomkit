@@ -6,7 +6,6 @@
 
 use libc::{c_ulong, c_double, c_long};
 use {Rng, Sample};
-use std::num::{Int, Float};
 use ffi::*;
 
 macro_rules! need {
