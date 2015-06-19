@@ -1,6 +1,4 @@
 language: rust
-rust:
-  - nightly
 install:
   - sudo apt-get install -qq python-numpy python-dev
 script:
@@ -10,7 +8,6 @@ script:
 after_success: |
   [ $TRAVIS_BRANCH = master ] &&
   [ $TRAVIS_PULL_REQUEST = false ] &&
-  [ $TRAVIS_RUST_VERSION = nightly ] &&
   echo '<meta http-equiv=refresh content=0;url=randomkit/index.html>' > target/doc/index.html &&
   pip install ghp-import --user $USER &&
   $HOME/.local/bin/ghp-import -n target/doc &&

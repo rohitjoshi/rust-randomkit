@@ -130,7 +130,7 @@ distribution!(Beta(a: f64, b: f64) -> f64, {
 pub struct Binomial { n: isize, p: f64 }
 distribution!(Binomial(n: isize, p: f64) -> isize, {
     need!(n >= 0);
-    need!(0.0 <= p && p <= 1.0, "0.0 <= p <= 1.0");
+    need!(0.0 <= p && p <= 1.0, "need 0.0 <= p <= 1.0");
 }, |self, rng| {
     unsafe { rk_binomial(&mut rng.state, self.n as c_long, self.p as c_double) as isize }
 });
@@ -148,7 +148,7 @@ distribution!(Chisquare(df: usize) -> f64, {
 pub struct Dirichlet { alpha: Vec<f64> }
 impl Dirichlet {
     pub fn new(alpha: Vec<f64>) -> Result<Dirichlet, &'static str> {
-        need!(alpha.iter().all(|a| *a > 0.0), "all alpha > 0.0");
+        need!(alpha.iter().all(|a| *a > 0.0), "need all alpha > 0.0");
         Ok(Dirichlet { alpha: alpha })
     }
 }
@@ -204,7 +204,7 @@ distribution!(Gamma(shape: f64, scale: f64) -> f64, {
 #[derive(Copy, Clone)]
 pub struct Geometric { p: f64 }
 distribution!(Geometric(p: f64) -> isize, {
-    need!(0.0 < p && p <= 1.0, "0.0 < p <= 1.0");
+    need!(0.0 < p && p <= 1.0, "need 0.0 < p <= 1.0");
 }, |self, rng| {
     unsafe { rk_geometric(&mut rng.state, self.p as c_double) as isize }
 });
@@ -224,8 +224,8 @@ pub struct Hypergeometric { ngood: isize, nbad: isize, nsample: isize }
 distribution!(Hypergeometric(ngood: isize, nbad: isize, nsample: isize) -> isize, {
     need!(ngood >= 0);
     need!(nbad >= 0);
-    need!(ngood.checked_add(nbad) != None, "ngood+nbad <= std::int::MAX");
-    need!(1 <= nsample && nsample <= ngood + nbad, "1 <= nsample <= ngood + nbad");
+    need!(ngood.checked_add(nbad) != None, "need ngood+nbad <= std::int::MAX");
+    need!(1 <= nsample && nsample <= ngood + nbad, "need 1 <= nsample <= ngood + nbad");
 }, |self, rng| {
     unsafe { rk_hypergeometric(&mut rng.state, self.ngood as c_long, self.nbad as c_long, self.nsample as c_long) as isize }
 });
@@ -268,11 +268,20 @@ distribution!(Logseries(p: f64) -> isize, {
 });
 
 /// Multinomial distribution
+///
+/// ```rust
+/// use randomkit::{Rng, Sample};
+/// use randomkit::dist::Multinomial;
+///
+/// let mut rng = Rng::new().unwrap();
+/// let d = Multinomial::new(1000, vec![0.25, 0.25, 0.5]).unwrap();
+/// println!("{:?}", d.sample(&mut rng));
+/// ```
 pub struct Multinomial { n: isize, pvals: Vec<f64> }
 impl Multinomial {
     pub fn new(n: isize, pvals: Vec<f64>) -> Result<Multinomial, &'static str> {
-        need!(pvals.iter().all(|p| *p >= 0.0 && *p <= 1.0), "0 <= p <= 1, all p in pvals");
-        need!(kahan_sum(pvals.init()) <= 1.0 + 1.0e-12, "sum(pvals[:-1]) <= 1.0");
+        need!(pvals.iter().all(|p| *p >= 0.0 && *p <= 1.0), "need 0 <= p <= 1, all p in pvals");
+        need!(kahan_sum(&pvals[..pvals.len()-1]) <= 1.0 + 1.0e-12, "need sum(pvals[:-1]) <= 1.0");
         Ok(Multinomial { n: n, pvals: pvals })
     }
 }
@@ -303,7 +312,7 @@ impl Sample<Vec<isize>> for Multinomial {
 pub struct NegativeBinomial { n: f64, p: f64 }
 distribution!(NegativeBinomial(n: f64, p: f64) -> isize, {
     need!(n > 0.0);
-    need!(0.0 < p && p < 1.0, "0.0 < p < 1.0");
+    need!(0.0 < p && p < 1.0, "need 0.0 < p < 1.0");
 }, |self, rng| {
     unsafe { rk_negative_binomial(&mut rng.state, self.n as c_double, self.p as c_double) as isize }
 });
@@ -401,7 +410,7 @@ distribution!(StandardT(df: f64) -> f64, {
 pub struct Triangular { left: f64, mode: f64, right: f64 }
 distribution!(Triangular(left: f64, mode: f64, right: f64) -> f64, {
     need!(left < right);
-    need!(left <= mode && mode <= right, "left <= mode <= right");
+    need!(left <= mode && mode <= right, "need left <= mode <= right");
 }, |self, rng| {
     unsafe { rk_triangular(&mut rng.state, self.left as c_double, self.mode as c_double, self.right as c_double) as f64 }
 });
@@ -414,7 +423,7 @@ pub struct Uniform { low: f64, scale: f64 }
 impl Uniform {
     pub fn new(low: f64, high: f64) -> Result<Uniform, &'static str> {
         let scale = high - low;
-        need!(scale.is_finite(), "(high - low) finite as f64");
+        need!(scale.is_finite(), "need (high - low) finite as f64");
         Ok(Uniform { low: low, scale: scale })
     }
 }

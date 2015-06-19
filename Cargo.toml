@@ -11,3 +11,6 @@ description = """
 `numpy.random` for Rust.
 """
 keywords = ["random"]
+
+[dependencies]
+libc = "0.1"
