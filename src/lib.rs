@@ -8,6 +8,21 @@
 //!
 //! This library is not suitable for cryptography.
 //!
+//! # Usage
+//!
+//! Add this to your `Cargo.toml`:
+//!
+//! ```toml
+//! [dependencies]
+//! randomkit = "0.1"
+//! ```
+//!
+//! and this to your crate root:
+//!
+//! ```rust
+//! extern crate randomkit;
+//! ```
+//!
 //! # Examples
 //!
 //! ## Standard normal distribution
@@ -16,6 +31,8 @@
 //! distribution) with mean 0 and standard deviation 1.
 //!
 //! ```rust
+//! extern crate randomkit;
+//!
 //! use randomkit::{Rng, Sample};
 //! use randomkit::dist::Gauss;
 //!
@@ -33,6 +50,8 @@
 //! standard deviation 5.
 //!
 //! ```rust
+//! extern crate randomkit;
+//!
 //! use randomkit::{Rng, Sample};
 //! use randomkit::dist::Normal;
 //!
