@@ -3,7 +3,8 @@
 //! This library provides a suite of nonuniform random number generators
 //! via bindings to the Numpy fork of RandomKit. It is approximately
 //! equivalent to Numpy's `numpy.random` module. The API is loosely
-//! based on that of `std::rand`.
+//! based on that of the [`rand`](https://github.com/rust-lang/rand)
+//! crate.
 //!
 //! This library is not suitable for cryptography.
 //!
@@ -19,9 +20,9 @@
 //! use randomkit::dist::Gauss;
 //!
 //! fn main() {
-//!     let rng = &mut Rng::new().unwrap();
+//!     let mut rng = Rng::new().unwrap();
 //!     for _ in 0..1000 {
-//!         println!("{}", Gauss.sample(rng));
+//!         println!("{}", Gauss.sample(&mut rng));
 //!     }
 //! }
 //! ```
@@ -36,10 +37,10 @@
 //! use randomkit::dist::Normal;
 //!
 //! fn main() {
-//!     let rng = &mut Rng::from_seed(1);
+//!     let mut rng = Rng::from_seed(1);
 //!     let normal = Normal::new(10.0, 5.0).unwrap();
 //!     for _ in 0..1000 {
-//!         println!("{}", normal.sample(rng));
+//!         println!("{}", normal.sample(&mut rng));
 //!     }
 //! }
 //! ```
@@ -73,8 +74,8 @@ impl Rng {
         r
     }
 
-    /// Initialize a new pseudorandom number generator using the OS's
-    /// random number generator as the seed.
+    /// Initialize a new pseudorandom number generator using the
+    /// operating system's random number generator as the seed.
     pub fn new() -> Option<Rng> {
         let mut r = Rng::empty();
         match unsafe { ffi::rk_randomseed(&mut r.state) } {

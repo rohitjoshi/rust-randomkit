@@ -1,15 +1,13 @@
 [package]
 
 name = "randomkit"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["David Stygstra <david.stygstra@gmail.com>"]
 build = "build.rs"
-
-# TODO: uncomment when rustpy and quickcheck are fixed
-#[dev-dependencies.rustpy]
-#
-#git = "https://github.com/lukemetz/rustpy"
-#
-#[dev-dependencies.quickcheck_macros]
-#
-#git = "https://github.com/BurntSushi/quickcheck"
+readme = "README.md"
+repository = "https://github.com/stygstra/rust-randomkit"
+homepage = "https://github.com/stygstra/rust-randomkit"
+description = """
+`numpy.random` for Rust.
+"""
+keywords = ["random"]
