@@ -1,10 +1,23 @@
-env:
-  global:
-    - secure: YuIeSxRvKcVrTn4YCO1+09I9PZPAhN+Sbz1USbHYJ7CJsGD/619N8Z8mI+wvr68g1AwSUOPosfdUIS2qe/6m5CDhaD1PSHhYi7QYbqhSDroKKNGXB25ntdzMp9Gx7RagrJfjIL96epAnVvNypyFBC2STm/WW2SPwjimEL6EiAlo=
 language: rust
+rust:
+  - nightly
 install:
   - sudo apt-get install -qq python-numpy python-dev
-after_script:
+script:
+  - cargo build --verbose
+  - cargo test --verbose
   - cargo doc
-  - mv target/doc doc
-  - curl http://www.rust-ci.org/artifacts/put?t=$RUSTCI_TOKEN | sh
+after_success: |
+  [ $TRAVIS_BRANCH = master ] &&
+  [ $TRAVIS_PULL_REQUEST = false ] &&
+  [ $TRAVIS_RUST_VERSION = nightly ] &&
+  echo '<meta http-equiv=refresh content=0;url=randomkit/index.html>' > target/doc/index.html &&
+  pip install ghp-import --user $USER &&
+  $HOME/.local/bin/ghp-import -n target/doc &&
+  git push -qf https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
+notifications:
+  email:
+    on_success: never
+env:
+  global:
+    secure: ajKJPaGZNGNgi2rKwNx8Uy6tLCOW9j/e19W3droYp3tHosEfioZWdvQ4FHduVzAO8Ofq9mLyJa+nd4xohIKtsOnms6pkplLCC9Sr+jJGYTJXpZQfgmwHezOn06k1V/2CxS15BObV0qS7IIX+LJlgH0TYESzAV8cm8sb/bJGPe84=
