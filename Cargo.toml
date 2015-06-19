@@ -3,6 +3,7 @@
 name = "randomkit"
 version = "0.1.0"
 authors = ["David Stygstra <david.stygstra@gmail.com>"]
+license = "MIT/BSD-3-Clause"
 build = "build.rs"
 readme = "README.md"
 repository = "https://github.com/stygstra/rust-randomkit"
