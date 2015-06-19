@@ -6,6 +6,7 @@ authors = ["David Stygstra <david.stygstra@gmail.com>"]
 build = "build.rs"
 readme = "README.md"
 repository = "https://github.com/stygstra/rust-randomkit"
+documentation = "https://stygstra.github.io/rust-randomkit/"
 homepage = "https://github.com/stygstra/rust-randomkit"
 description = """
 `numpy.random` for Rust.

@@ -6,3 +6,5 @@ rust-randomkit
 
 Bindings for [NumPy's fork](https://github.com/numpy/numpy/tree/master/numpy/random/mtrand)
 of [RandomKit](http://js2007.free.fr/code/index.html#RandomKit).
+
+[Documentation](https://stygstra.github.io/rust-randomkit/)
