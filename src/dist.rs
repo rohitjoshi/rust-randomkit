@@ -157,14 +157,14 @@ impl Sample<Vec<f64>> for Dirichlet {
         let k = self.alpha.len();
         let mut diric: Vec<f64> = (0..k).map(|_| 0.0f64).collect();
         let mut acc = 0.0f64;
-        for j in (0..k) {
+        for j in 0..k {
             unsafe {
                 diric[j] = rk_standard_gamma(&mut rng.state, self.alpha[j] as c_double) as c_double;
             }
             acc += diric[j];
         }
         let invacc = 1.0 / acc;
-        for j in (0..k) {
+        for j in 0..k {
             diric[j] = diric[j] * invacc;
         }
         diric
@@ -291,7 +291,7 @@ impl Sample<Vec<isize>> for Multinomial {
         let mut multin: Vec<isize> = (0..d).map(|_| 0).collect();
         let mut sum = 1.0f64;
         let mut dn = self.n;
-        for j in (0..d-1) {
+        for j in 0..d-1 {
             let p = self.pvals[j] / sum;
             unsafe {
                 multin[j] = rk_binomial(&mut rng.state, dn as c_long, p as c_double) as isize;
