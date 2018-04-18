@@ -77,26 +77,30 @@ mod ffi;
 pub struct Rng { state: ffi::RkState }
 
 impl Rng {
-    fn empty() -> Rng {
-        unsafe { Rng { state: mem::uninitialized() } }
+    unsafe fn uninitialized() -> Rng {
+        Rng { state: mem::uninitialized() }
     }
 
     /// Initialize a new pseudorandom number generator from a seed.
     pub fn from_seed(seed: u32) -> Rng {
         // Seed is &'d with 0xffffffff in randomkit.c, so there's no
         // point in making it larger.
-        let mut r = Rng::empty();
-        unsafe { ffi::rk_seed(seed as c_ulong, &mut r.state); }
-        r
+        unsafe {
+            let mut r = Rng::uninitialized();
+            ffi::rk_seed(seed as c_ulong, &mut r.state);
+            r
+        }
     }
 
     /// Initialize a new pseudorandom number generator using the
     /// operating system's random number generator as the seed.
     pub fn new() -> Option<Rng> {
-        let mut r = Rng::empty();
-        match unsafe { ffi::rk_randomseed(&mut r.state) } {
-            ffi::RkError::RkNoerr => Some(r),
-            _ => None,
+        unsafe {
+            let mut r = Rng::uninitialized();
+            match ffi::rk_randomseed(&mut r.state) {
+                ffi::RkError::RkNoerr => Some(r),
+                _ => None,
+            }
         }
     }
 }
