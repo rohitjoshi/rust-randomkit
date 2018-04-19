@@ -67,18 +67,22 @@
 #![crate_name = "randomkit"]
 
 extern crate libc;
-
+extern crate rand;
 use std::mem;
 use libc::c_ulong;
 
 pub mod dist;
 mod ffi;
 
-pub struct Rng { state: ffi::RkState }
+pub struct Rng {
+    state: ffi::RkState,
+}
 
 impl Rng {
     unsafe fn uninitialized() -> Rng {
-        Rng { state: mem::uninitialized() }
+        Rng {
+            state: mem::uninitialized(),
+        }
     }
 
     /// Initialize a new pseudorandom number generator from a seed.
@@ -102,6 +106,20 @@ impl Rng {
                 _ => None,
             }
         }
+    }
+}
+
+impl rand::Rng for Rng {
+    fn next_u32(&mut self) -> u32 {
+        unsafe { ffi::rk_ulong(&mut self.state) as u32 }
+    }
+
+    fn next_u64(&mut self) -> u64 {
+        unsafe { ffi::rk_ulong(&mut self.state) as u64 }
+    }
+
+    fn next_f64(&mut self) -> f64 {
+        unsafe { ffi::rk_double(&mut self.state) as f64 }
     }
 }
 
